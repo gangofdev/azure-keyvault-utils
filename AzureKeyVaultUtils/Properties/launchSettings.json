@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AzureKeyVaultUtils": {
+      "commandName": "Project",
+      "commandLineArgs": "azurekeyvaultutils --o Export --f \"C:\\Users\\vinita.k\\OneDrive - Technovert\\Desktop\\test-kv.json\" --u \"https://kv-opdaas-dev-eastus.vault.azure.net/\""
+    }
+  }
+}
