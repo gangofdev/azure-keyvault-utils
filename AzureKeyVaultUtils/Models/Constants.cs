@@ -13,18 +13,13 @@
 
         public static class Commands
         {
-            public static readonly string InsertCommand = "--o Insert --f \"<Path-to-file>\" --u \"<Key-vault-url>\"";
-            public static readonly string ExportCommand = "--o Export --f \"<Path-to-file>\" --u \"<Key-vault-url>\"";
-            public static readonly string HelpCommand = "--h";
-            public static readonly string InfoCommand = "--i";
-        }
-
-        public static class CommandDescs
-        {
-            public static readonly string InsertDesc = "Insert the key-value pairs from the json to the key vault.";
-            public static readonly string ExportDesc = "Retrieve the secrets from the key vault & export it into a json file.";
-            public static readonly string HelpDesc = "Display this help message.";
-            public static readonly string InfoDesc = "Description of the tool.";
+            public static readonly Dictionary<string, string> CommandDesc = new Dictionary<string, string>
+            {
+                { "--o Insert --f \"<Path-to-file>\" --u \"<Key-vault-url>\"", "Insert the key-value pairs from the json to the key vault." },
+                { "--o Export --f \"<Path-to-file>\" --u \"<Key-vault-url>\"", "Retrieve the secrets from the key vault & export it into a json file." },
+                { "--h", "Display this help message." },
+                { "--i", "Description of the tool." }
+            };
         }
     }
 }

@@ -41,5 +41,29 @@ namespace AzureKeyVaultUtils.Helpers
             await File.WriteAllTextAsync(filePath, formattedJson);
             return true;
         }
+
+        /// <summary>
+        /// An asynchronous task that recursively inserts data into Azure Key Vault by iterating over the properties of a JsonElement data.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
+        public static async Task Insert(KeyVaultHelper vaultHelper, JsonElement data, string prefix = "")
+        {
+            foreach (JsonProperty property in data.EnumerateObject())
+            {
+                if (property.Value.ValueKind == JsonValueKind.Object)
+                {
+                    string newPrefix = $"{prefix}{property.Name}--";
+                    await Insert(vaultHelper, property.Value, newPrefix);
+                }
+                else
+                {
+                    string keyWithPrefix = prefix + property.Name;
+                    string value = property.Value.ToString();
+                    await vaultHelper.Insert(keyWithPrefix, value);
+                }
+            }
+        }
     }
 }

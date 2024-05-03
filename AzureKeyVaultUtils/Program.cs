@@ -46,7 +46,7 @@ namespace AzureKeyVaultUtils
                             Log.Information($"Reading the json file.");
                             string jsonContent = File.ReadAllText(options.FilePath!);
                             JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
-                            Task.Run(async () => await vaultHelper.Insert(jsonDocument.RootElement)).Wait();
+                            Task.Run(async () => await JsonHelper.Insert(vaultHelper, jsonDocument.RootElement)).Wait();
                             Log.Information($"Finished inserting secrets.");
                             break;
                         case OperationEnum.Export:  //Performs export of key-value pairs from Azure Key Vault to a json file
@@ -70,19 +70,11 @@ namespace AzureKeyVaultUtils
 
         private static void DisplayHelpDesc()
         {
-            var commands = new[]
-        {
-            new { Command = Constants.Commands.InsertCommand, Description = Constants.CommandDescs.InsertDesc },
-            new { Command = Constants.Commands.ExportCommand, Description = Constants.CommandDescs.ExportDesc },
-            new { Command = Constants.Commands.HelpCommand, Description = Constants.CommandDescs.HelpDesc },
-            new { Command = Constants.Commands.InfoCommand , Description = Constants.CommandDescs.InfoDesc },
-        };
+            int maxCommandWidth = Constants.Commands.CommandDesc.Keys.Max(key => key.Length);
 
-            int maxCommandWidth = commands.Max(c => c.Command.Length);
-
-            foreach (var command in commands)
+            foreach (KeyValuePair<string,string> command in Constants.Commands.CommandDesc)
             {
-                string formattedCommand = $"{command.Command.PadRight(maxCommandWidth)}  {command.Description}";
+                string formattedCommand = $"{command.Key.PadRight(maxCommandWidth)}  {command.Value}";
                 Log.Information(formattedCommand);
             }
         }
