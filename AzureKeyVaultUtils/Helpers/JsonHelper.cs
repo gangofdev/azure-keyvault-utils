@@ -8,7 +8,7 @@ namespace AzureKeyVaultUtils.Helpers
         /// An asynchronous task that stores key-value pairs to a JSON file.
         /// </summary>
         /// <param name="keyValues"></param>
-        /// <returns></returns>
+        /// <returns>Returns true if key-value is successfully stored in JSON file</returns>
         public static async Task<bool> WriteToFile(Dictionary<string, string> keyValues, string filePath)
         {
             Dictionary<string, object> serializedData = new Dictionary<string, object>();
@@ -43,14 +43,26 @@ namespace AzureKeyVaultUtils.Helpers
         }
 
         /// <summary>
+        /// Returns a dictionary of key & secrets from a JSON file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>Dictionary of key & secret pair</returns>
+        public static Dictionary<string, string> ReadSecrets(string filePath)
+        {
+            string jsonContent = File.ReadAllText(filePath);
+            JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
+            return GetSecretsFromJson(jsonDocument.RootElement);
+        }
+
+        /// <summary>
         /// An asynchronous task that recursively iterates over the properties of a JSON and returns the secrets.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="prefix"></param>
-        /// <returns></returns>
-        public static Dictionary<string, string> GetSecretsFromJson(JsonElement data, Dictionary<string, string> secrets = null, string prefix = "")
+        /// <returns>Dictionary of key & secret pair</returns>
+        private static Dictionary<string, string> GetSecretsFromJson(JsonElement data, Dictionary<string, string> secrets = null, string prefix = "")
         {
-            if (secrets == null) 
+            if (secrets == null)
             {
                 secrets = new Dictionary<string, string>();
             }
@@ -69,13 +81,6 @@ namespace AzureKeyVaultUtils.Helpers
                 }
             }
             return secrets;
-        }
-
-        public static Dictionary<string, string> ReadSecrets(string filePath)
-        {
-            string jsonContent = File.ReadAllText(filePath);
-            JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
-            return GetSecretsFromJson(jsonDocument.RootElement);
         }
     }
 }

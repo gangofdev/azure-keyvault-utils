@@ -71,9 +71,9 @@ namespace AzureKeyVaultUtils
 
         private static void DisplayHelpDesc()
         {
-            int maxCommandWidth = Constants.Commands.commands.Select(x => x.Name).Max(key => key.Length);
+            int maxCommandWidth = Constants.CommandInfo.Commands.Select(x => x.Name).Max(key => key.Length);
 
-            foreach (Command command in Constants.Commands.commands)
+            foreach (Command command in Constants.CommandInfo.Commands)
             {
                 string formattedCommand = $"{command.Name.PadRight(maxCommandWidth)}  {command.Description}";
                 Log.Information(formattedCommand);
