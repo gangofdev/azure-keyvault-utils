@@ -43,27 +43,28 @@ namespace AzureKeyVaultUtils.Helpers
         }
 
         /// <summary>
-        /// An asynchronous task that recursively inserts data into Azure Key Vault by iterating over the properties of a JsonElement data.
+        /// An asynchronous task that recursively iterates over the properties of a JSON and returns the secrets.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="prefix"></param>
         /// <returns></returns>
-        public static async Task Insert(KeyVaultHelper vaultHelper, JsonElement data, string prefix = "")
+        public static Dictionary<string, string> GetSecretsFromJson(JsonElement data, Dictionary<string, string> secrets, string prefix = "")
         {
             foreach (JsonProperty property in data.EnumerateObject())
             {
                 if (property.Value.ValueKind == JsonValueKind.Object)
                 {
                     string newPrefix = $"{prefix}{property.Name}--";
-                    await Insert(vaultHelper, property.Value, newPrefix);
+                    GetSecretsFromJson(property.Value, secrets, newPrefix);
                 }
                 else
                 {
                     string keyWithPrefix = prefix + property.Name;
                     string value = property.Value.ToString();
-                    await vaultHelper.Insert(keyWithPrefix, value);
+                    secrets.Add(keyWithPrefix, value);
                 }
             }
+            return secrets;
         }
     }
 }

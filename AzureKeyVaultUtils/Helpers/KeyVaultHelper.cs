@@ -45,9 +45,9 @@ namespace AzureKeyVaultUtils.Helpers
         /// <returns></returns>
         public async Task<Dictionary<string, string>> GetSecrets()
         {
-            var secrets = _client.GetPropertiesOfSecrets();
+            var secrets = _client.GetPropertiesOfSecretsAsync();
             Dictionary<string, string> keyValues = new Dictionary<string, string>();
-            foreach (var secret in secrets)
+            await foreach (var secret in secrets)
             {
                 string secretName = secret.Name;
                 KeyVaultSecret secretValue = await _client.GetSecretAsync(secretName);
