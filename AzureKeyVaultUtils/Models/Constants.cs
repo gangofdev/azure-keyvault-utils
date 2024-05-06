@@ -11,7 +11,7 @@
             public static readonly string InfoMessage = "Azure Key Vault Manager\nThis tool inserts & exports the secrets from key vault.";
         }
 
-        public static class CommandInfo
+        public static class Commands
         {
             public static readonly List<Command> commands = new List<Command>()
             {
@@ -20,12 +20,6 @@
                 new Command(){ Name = "--h", Description = "Display this help message." },
                 new Command(){ Name = "--i", Description = "Description of the tool." }
             };
-        }
-
-        public class Command
-        {
-            public string Name { get; set; }
-            public string Description { get; set; }
         }
     }
 }

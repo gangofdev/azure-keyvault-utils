@@ -2,7 +2,6 @@
 using AzureKeyVaultUtils.Models;
 using CommandLine;
 using Serilog;
-using System.Text.Json;
 
 namespace AzureKeyVaultUtils
 {
@@ -44,10 +43,7 @@ namespace AzureKeyVaultUtils
                         case OperationEnum.Insert:
                             //Performs insertion of key-value pairs into the Azure Key Vault
                             Log.Information($"Reading the json file.");
-                            string jsonContent = File.ReadAllText(options.FilePath!);
-                            JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
-                            Dictionary<string, string> secrets = new Dictionary<string, string>();
-                            JsonHelper.GetSecretsFromJson(jsonDocument.RootElement, secrets);
+                            Dictionary<string, string> secrets = JsonHelper.ReadSecrets(options.FilePath!);
                             foreach(KeyValuePair<string, string> kvp in secrets)
                             {
                                 Task.Run(async () => await vaultHelper.Insert(kvp.Key, kvp.Value)).Wait();
@@ -75,9 +71,9 @@ namespace AzureKeyVaultUtils
 
         private static void DisplayHelpDesc()
         {
-            int maxCommandWidth = Constants.CommandInfo.commands.Select(x => x.Name).Max(key => key.Length);
+            int maxCommandWidth = Constants.Commands.commands.Select(x => x.Name).Max(key => key.Length);
 
-            foreach (Constants.Command command in Constants.CommandInfo.commands)
+            foreach (Command command in Constants.Commands.commands)
             {
                 string formattedCommand = $"{command.Name.PadRight(maxCommandWidth)}  {command.Description}";
                 Log.Information(formattedCommand);

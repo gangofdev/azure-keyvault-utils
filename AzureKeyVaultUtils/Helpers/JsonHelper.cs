@@ -36,7 +36,7 @@ namespace AzureKeyVaultUtils.Helpers
                 WriteIndented = true,
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
-        
+
             string formattedJson = JsonSerializer.Serialize(serializedData, options);
             await File.WriteAllTextAsync(filePath, formattedJson);
             return true;
@@ -48,8 +48,12 @@ namespace AzureKeyVaultUtils.Helpers
         /// <param name="data"></param>
         /// <param name="prefix"></param>
         /// <returns></returns>
-        public static Dictionary<string, string> GetSecretsFromJson(JsonElement data, Dictionary<string, string> secrets, string prefix = "")
+        public static Dictionary<string, string> GetSecretsFromJson(JsonElement data, Dictionary<string, string> secrets = null, string prefix = "")
         {
+            if (secrets == null) 
+            {
+                secrets = new Dictionary<string, string>();
+            }
             foreach (JsonProperty property in data.EnumerateObject())
             {
                 if (property.Value.ValueKind == JsonValueKind.Object)
@@ -65,6 +69,13 @@ namespace AzureKeyVaultUtils.Helpers
                 }
             }
             return secrets;
+        }
+
+        public static Dictionary<string, string> ReadSecrets(string filePath)
+        {
+            string jsonContent = File.ReadAllText(filePath);
+            JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
+            return GetSecretsFromJson(jsonDocument.RootElement);
         }
     }
 }
